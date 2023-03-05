@@ -75,7 +75,7 @@
             -->
 
         <!-- A choice submission form example -->
-        <form id="questionform" action="point to a submit view" method="post">
+        <form id="questionform" Required action="{% url 'onlinecourse:submit' course_id=course.id %}" method="post">
             <!--... for each question in the course ...-->
             {% for question in course.question_set.all %}
             <div class="card mt-1">

@@ -114,9 +114,11 @@ def enroll(request, course_id):
 def submit(request, course_id):
     course = get_object_or_404(Course, pk=course_id)
     user = request.user
-    enrollment = Enrollment.objects.filter(user=user, course=course).get()
+    # enrollment = Enrollment.objects.filter(user=user, course=course).get()
 
-    submission = Submission.objects.create(enrollment_id=enrollment.id)
+    # submission = Submission.objects.create(enrollment_id=enrollment.id)
+    submission = Submission.objects.create(
+        enrollment_id=Enrollment.objects.filter(user=user, course=course).get())
 
     answers = extract_answers(request)
     for a in answers:
@@ -148,23 +150,36 @@ def show_exam_result(request, course_id, submission_id):
     course = get_object_or_404(Course, pk=course_id)
     submission = get_object_or_404(Submission, pk=submission_id)
     total = 0
+    score = 0
     total_user = 0
     q_results = {}
     c_submits = {}
     c_results = {}
     for q in course.question_set.all():
         q_total = 0
+        total += 1
         q_total_user = 0
         for c in q.choice_set.all():
             q_total += 1
+            print("q_total = ", q_total)
             temp_right = c.is_correct
-            count = submission.choices.filter(id=c.id).count()
+            print("temp_right = ", temp_right)
 
+            count = submission.choices.filter(id=c.id).count()
+            print("count = ", count)
+            # score = count
             temp_user = count > 0
+            print("temp_user = ", count > 0)
+
             c_submits[c.id] = temp_user
             c_results[c.id] = temp_user == temp_right
-            if temp_user == temp_right:
+            print("temp_user == temp_right ", temp_user == temp_right)
+
+            if temp_user == temp_right and temp_user > 0 :
                 q_total_user += 1
+                score += 1
+                
+        # q_results[q.id] =  q.grade*(q_total_user / q_total)
         q_results[q.id] = q.grade*(q_total_user / q_total)
         total += q.grade
         total_user += q_results[q.id]
@@ -177,7 +192,12 @@ def show_exam_result(request, course_id, submission_id):
     context["q_results"] = q_results
     context["c_submits"] = c_submits
     context["c_results"] = c_results
-    context["grade"] = int((total_user/total)*100)
+    print("total user = ", total_user)
+    print("total =  ", total)
+    # context["grade"]  =  int((total_user/total)*100)
+    print("score = ", score)
+    context["grade"] = score
+
     # print(vars(submission.chocies))
     # user = request.user
     # return render(request, 'onlinecourse/show_exam_result.html', context)

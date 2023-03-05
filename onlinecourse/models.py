@@ -120,6 +120,7 @@ class Enrollment(models.Model):
 class Question(models.Model):
     question_text = models.CharField(null=False, max_length=200,)
     questions = models.ForeignKey(Course, on_delete=models.CASCADE)
+    grade = models.IntegerField(default=0)
 
 
 #  <HINT> Create a Choice Model with:
@@ -144,5 +145,6 @@ class Choice(models.Model):
 #    choices = models.ManyToManyField(Choice)
 #    Other fields and methods you would like to design
 class Submission(models.Model):
-    enrollement_id = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
-    choice_id = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    enrollment_id = models.ForeignKey(Enrollment, on_delete=models.CASCADE)
+    # choice_id = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True)
+    choices = models.ManyToManyField(Choice)
