@@ -175,19 +175,22 @@ def show_exam_result(request, course_id, submission_id):
             c_results[c.id] = temp_user == temp_right
             print("temp_user == temp_right ", temp_user == temp_right)
 
-            if temp_user == temp_right and temp_user > 0 :
+            if temp_user == temp_right and temp_user == True:
                 q_total_user += 1
+                q.grade = 20
+                q.save()
                 score += 1
-                
+
         # q_results[q.id] =  q.grade*(q_total_user / q_total)
         q_results[q.id] = q.grade*(q_total_user / q_total)
-        total += q.grade
+
         total_user += q_results[q.id]
     context = {}
     context["course"] = course
     context["submission"] = submission
     # context["choices"]  =  submission.chocies.all()
-    context["total"] = total
+    print('total = ', total * 20)
+    context["total"] = total * 20
     context["total_user"] = total_user
     context["q_results"] = q_results
     context["c_submits"] = c_submits
@@ -196,7 +199,7 @@ def show_exam_result(request, course_id, submission_id):
     print("total =  ", total)
     # context["grade"]  =  int((total_user/total)*100)
     print("score = ", score)
-    context["grade"] = score
+    context["grade"] = score * 20
 
     # print(vars(submission.chocies))
     # user = request.user
