@@ -64,9 +64,9 @@
                     <th colspan="1">
                         {{ question.question_text }} </th>
                     <th>
-                        {% for key, value in c_results.items %}
+                        {% for key, value in q_results.items %}
                         {% if question.id == key %}
-                        {{ question.grade }}
+                        {{ value }}
                         {% endif %}
                         {% endfor %}
 
