@@ -156,6 +156,7 @@ def show_exam_result(request, course_id, submission_id):
     q_results = {}
     c_submits = {}
     c_results = {}
+    c_obj = {}
 
     for q in course.question_set.all():
         q_total = 0
@@ -175,9 +176,10 @@ def show_exam_result(request, course_id, submission_id):
             print("temp_user = ", count > 0)
 
             c_submits[c.id] = temp_user
+            
             c_results[c.id] = temp_user == temp_right
             print("temp_user == temp_right ", temp_user == temp_right)
-
+            c_obj[q.id] = c
             if temp_user == temp_right and temp_user == True:
                 q_total_user += 1
                 # q.grade = 20
@@ -186,6 +188,8 @@ def show_exam_result(request, course_id, submission_id):
                 print("both true")
                 print("value of q.grade == ", q.grade)
                 points = 20
+                break        
+                
                 
         # q_results[q.id] =  q.grade*(q_total_user / q_total)
         print("value of q.grade == ", q.grade)
@@ -201,6 +205,7 @@ def show_exam_result(request, course_id, submission_id):
     context["q_results"] = q_results
     context["c_submits"] = c_submits
     context["c_results"] = c_results
+    context["c_obj"] = c_obj
     print("total user = ", total_user)
     print("total =  ", total)
     # context["grade"]  =  int((total_user/total)*100)

@@ -62,7 +62,8 @@
             <table class='table table-bordered table-striped' style='width:500px; margin:auto'>
                 <tr>
                     <th colspan="1">
-                        {{ question.question_text }} </th>
+                        {{ question.question_text }}
+                    </th>
                     <th>
                         {% for key, value in q_results.items %}
                         {% if question.id == key %}
@@ -70,49 +71,70 @@
                         {% endif %}
                         {% endfor %}
 
-                        / 20 points </th>
+                        / 20 points
+                    </th>
 
                     {% for choice in question.choice_set.all %}
+                    {% if choice.is_correct %}
+
                 <tr>
-                    <td>{{ choice.choice_text }} </td>
+                    <td style="background-color: lightgreen;">{{ choice.choice_text }} </td>
 
-                    </td>
-
-                    <td :style='background-color:blue
-                          {% for key, value in c_results.items %}
-                                    {% if choice.id == key %}
-                                    {% if value == True %}
-                                    palegreen
-                                    {% else %}
-                                    lightpink
-  
-                                 {% endif %}
-                                        {% endif %}
-                                {% endfor %}'>
-
-
-                        Right choice:<b> {{ choice.is_correct}} </b>
-
-                        <br> Your choice: <b>
-                            {% for key, value0 in c_submits.items %}
+                    <td style="background-color: lightgreen;">
+                        Right choice:<b> CORRECT </b>
+                        <!-- <br> -->
+                        <!-- Your choice: -->
+                        <b>
+                            <!-- {% for key, value0 in c_submits.items %}
                             {% if choice.id == key %}
                             {{ value0 }}
 
                             {% endif %}
-                            {% endfor %}
+                            {% endfor %} -->
                         </b>
-                        <br>
 
                     </td>
 
                 </tr>
 
+                {% endif %}
                 {% endfor %}
                 </tr>
+
+                <tr>
+
+                    {% for choice in question.choice_set.all %}
+                    {% for key, value in c_submits.items %}
+                    {% if choice.id == key and value == True %}
+
+                    {% if choice.is_correct %}
+                <tr style="background-color: lightgreen;">
+                    <td>{{ choice.choice_text }} </td>
+
+                    <td>
+                        Your choice:<b> CORRECT </b>
+
+                    </td>
+
+                </tr>
+                {% else%}
+                <tr style="background-color: rgb(238, 144, 144);">
+                    <td>{{ choice.choice_text }} </td>
+
+                    <td>
+                        Your choice:<b> WRONG </b>
+                    </td>
+
+                </tr>
+                {% endif %}
+
+                {% endif %}
+                {% endfor %}
+                {% endfor %}
+                </tr>
+
             </table>
             {% endfor %}
-
-
         </div>
     </div>
 </body>
